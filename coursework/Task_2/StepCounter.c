@@ -51,6 +51,13 @@ int main() {
         printf("E: Find the mean step count of all the records in the file\n");
         printf("F: Find the longest continuous period where the step count is above 500 steps\n");
         printf("Q: Quit\n");
+        char option;
+        printf("Enter Option: ");
+        scanf("%s", &option);
+        if (option = "A")
+        {return 0;}
+        else {
+            printf("error\n");
     }
     
 
