@@ -42,6 +42,19 @@ void tokeniseRecord(const char *input, const char *delimiter,
 
 // Complete the main function
 int main() {
+    char choice ;
+    int counter = 0;
+    FITNESS_DATA data[100];
+    int buffer_size = 250;
+    char line[buffer_size];
+    char filename;
+
+    FILE *input = fopen("FitnessData_2023.csv","r");
+
+    char date[11];
+    char time[6];
+    char steps[20];
+
     { 
         printf("Menu Options:\n");
         printf("A: Specify the filename to be imported\n");
@@ -54,11 +67,46 @@ int main() {
         char option;
         printf("Enter Option: ");
         scanf("%s", &option);
-        if (option = "A")
-        {return 0;}
-        else {
-            printf("error\n");
+    
+        while (getchar() != '\n');
+        switch(option)
+        {
+        case 'Q':
+        case 'q':
+            return 0;
+            break;
+
+        default:
+            printf("Invalid choice. Try again.\n");
+            main();
+
+        case 'a':
+        case 'A':
+            printf("Input filename: ");
+            scanf("%s", &filename);
+            if (filename == "FitnessData_2023.csv"){
+                main(); }
+            else {
+                printf("Invalid File name");
+            }
+            
+
+
+        case 'b':
+        case 'B':
+            while (fgets(line,buffer_size,input))
+        {
+                tokeniseRecord(line, ",",date,time,steps);
+
+                strcpy(data[counter].date,date);
+                strcpy(data[counter].time,time);
+                data[counter].steps= atoi(steps);
+                counter ++;
+        }
+            printf ("Number of records in file: %d\n", counter);
+            main();
+        
+    }
     }
     
-
 }
