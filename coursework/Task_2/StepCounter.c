@@ -4,16 +4,7 @@
 
 #include <string.h>
 
-//#include "FitnessDataStruct.h"
-
-// Struct moved to header file
-
-// Define any additional variables here
-// Global variables for filename and FITNESS_DATA array+
-
-// This is your helper function. Do not change it in any way.
-// Inputs: character array representing a row; the delimiter character
-// Ouputs: date character array; time character array; steps character array
+#include "FitnessDataStruct.h"
 struct FITNESS_DATA {
   char date[11];
   char time[6];
@@ -48,8 +39,6 @@ void tokeniseRecord(const char * input,
   free(inputCopy);
 }
 
-char choice;
-
 FILE * file;
 
 char date[11];
@@ -72,7 +61,7 @@ int action(int option) {
         file = fopen(filename, "r");
 
         if (!file)
-        return printf("Can't open file\n");
+        return printf("Error: Could not find or open the file.\n");
         else
         (
             printf("File successfully loaded.\n"));
@@ -90,15 +79,12 @@ int action(int option) {
         break;
     case 'B':
     case 'b':
-        printf("Number of records in file: %i\n", counter);
+        printf("Total records: %i\n", counter);
         break;
 
     case 'Q':
     case 'q':
         exit(1);
-
-    default:
-        printf("Invalid choice. Try again.\n");
 
     int lowest_steps;
     int i;
@@ -114,8 +100,8 @@ int action(int option) {
 
       } 
    }
-      printf("The date and timeslot with the lowest steps are: %s,%s\n", fitness_array[lowest_i].date, fitness_array[lowest_i].time );
-      break;
+    printf("Fewest steps: %s %s\n", fitness_array[lowest_i].date, fitness_array[lowest_i].time );
+    break;
 
     int highest_steps;
     int highest_i;
@@ -129,11 +115,11 @@ int action(int option) {
         highest_i = i;
     }
 }      
-        printf("The date and timeslot with the highest steps are: %s,%s\n", fitness_array[highest_i].date, fitness_array[highest_i].time );
+        printf("Largest steps: %s %s\n", fitness_array[highest_i].date, fitness_array[highest_i].time );
         break;
 
     int total;
-    float mean;
+    int mean;
     case 'e':
     case 'E':
 
@@ -141,15 +127,15 @@ int action(int option) {
     for (i=0 ; i < counter; i++){
       total = total + atoi(fitness_array[i].steps);
     }
-    mean = (float)total/counter;
-    printf("The mean step count is %.2f\n", mean);
+    mean = total/counter;
+    printf("Mean step count: %i\n", mean);
     break;
 
     int longest_period = 0;
         int current_period = 0;
         int startPeriod;
         int endPeriod;
-        case 'f':
+        //case 'f':
         case 'F':
             startPeriod = 0;
             endPeriod = 0;
@@ -177,13 +163,16 @@ int action(int option) {
             }
 
             if (longest_period > 0) {
-                printf("The longest period with steps over 500 starts at: %s, %s\n", fitness_array[startPeriod].date, fitness_array[startPeriod].time);
-                printf("And ends at: %s, %s\n", fitness_array[endPeriod].date, fitness_array[endPeriod].time);
+                printf("Longest period start: %s %s\n", fitness_array[startPeriod].date, fitness_array[startPeriod].time);
+                printf("Longest period end: %s %s\n", fitness_array[endPeriod].date, fitness_array[endPeriod].time);
             } else {
                 printf("No period with steps over 500 found.\n");
             }
-            break;
-    
+          break;
+
+    default:
+    printf("Invalid choice. Try again.\n");
+    return 1;
     }
 }
 
@@ -208,6 +197,4 @@ int main() {
     fflush(stdin);
     while ((option = getchar()) != '\n');
   }
-}
-
-   
+} 
