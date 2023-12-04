@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include <string.h>
-
+#include <math.h>
 #include "FitnessDataStruct.h"
 struct FITNESS_DATA {
   char date[11];
@@ -60,8 +60,10 @@ int action(int option) {
 
         file = fopen(filename, "r");
 
-        if (!file)
-        return printf("Error: Could not find or open the file.\n");
+        if (!file){
+        printf("Error: Could not find or open the file.\n");
+        exit(1);
+        }
         else
         (
             printf("File successfully loaded.\n"));
@@ -84,7 +86,7 @@ int action(int option) {
 
     case 'Q':
     case 'q':
-        exit(1);
+        exit(0);
 
     int lowest_steps;
     int i;
@@ -119,7 +121,7 @@ int action(int option) {
         break;
 
     int total;
-    int mean;
+    float mean;
     case 'e':
     case 'E':
 
@@ -127,48 +129,46 @@ int action(int option) {
     for (i=0 ; i < counter; i++){
       total = total + atoi(fitness_array[i].steps);
     }
-    mean = total/counter;
-    printf("Mean step count: %i\n", mean);
+    mean = (float)total/counter;
+    int roundedMean = round(mean);
+    printf("Mean step count: %d\n",roundedMean);
     break;
 
     int longest_period = 0;
-        int current_period = 0;
-        int startPeriod;
-        int endPeriod;
-        //case 'f':
-        case 'F':
-            startPeriod = 0;
-            endPeriod = 0;
-            longest_period = 0;
+    int current_period = 0;
+    int startPeriod = 0;
+    int endPeriod = 0;
+    int newStartPeriod = 0;
+    case 'f':
+    case 'F':
+
+    for (int i = 0; i < counter; i++) {
+        int current_steps = atoi(fitness_array[i].steps);
+
+        if (current_steps > 500) {
+            current_period++;
+
+            if (current_period == 1) {
+                startPeriod = i;
+            }
+        } else {
             current_period = 0;
+        }
 
-            for (int i = 0; i < counter; i++) {
-                int current_steps = atoi(fitness_array[i].steps);
-
-                if (current_steps > 500) {
-                    current_period++;
-
-                    if (current_period == 1) {
-
-                        startPeriod = i;
-                    }
-                } else {
-                    current_period = 0;
-                }
-
-                if (current_period > longest_period) {
-                    longest_period = current_period;
-                    endPeriod = i;
-                }
-            }
-
-            if (longest_period > 0) {
-                printf("Longest period start: %s %s\n", fitness_array[startPeriod].date, fitness_array[startPeriod].time);
-                printf("Longest period end: %s %s\n", fitness_array[endPeriod].date, fitness_array[endPeriod].time);
-            } else {
-                printf("No period with steps over 500 found.\n");
-            }
-          break;
+        if (current_period >= longest_period) {
+            longest_period = current_period;
+            endPeriod = i;
+            newStartPeriod = endPeriod - longest_period + 1;
+        }
+    }
+    printf("%d,%d\n", newStartPeriod, endPeriod);
+    if (longest_period > 0) {
+        printf("Longest period start: %s %s\n", fitness_array[newStartPeriod].date, fitness_array[newStartPeriod].time);
+        printf("Longest period end: %s %s\n", fitness_array[endPeriod].date, fitness_array[endPeriod].time);
+    } else {
+        printf("No period with steps over 500 found.\n");
+    }
+    break;
 
     default:
     printf("Invalid choice. Try again.\n");
